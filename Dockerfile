@@ -1,8 +1,11 @@
-FROM ubuntu:16.04
- 
-# tzdata for timzone
-RUN apt-get update -y
-RUN apt-get install -y tzdata
- 
-# timezone env with default
-ENV TZ Asia/India
+FROM python:3.9
+
+WORKDIR /app
+
+COPY requirements.txt /app/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+COPY . /app
+
+CMD ["python", "main.py"]
