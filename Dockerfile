@@ -9,6 +9,3 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 COPY . /app
 
 CMD ["python", "main.py"]
-RUN apt-get update && apt-get install -y tzdata
-
-ENV TZ="Etc/GMT-7"
