@@ -1,6 +1,6 @@
 import telebot
 import config
-
+import pytz
 
 bot = telebot.TeleBot(token=config.TOKEN)
 
@@ -138,7 +138,8 @@ def send_message(message):
             f' и добавит в меня ближайшее время всех маршрутов города')
        bot.reply_to(message, mess, parse_mode='html')
 
-    date_now = datetime.now()
+    tz = pytz.timezone('Etc/GMT-7')
+    date_now = datetime.now(tz)
     now = date_now.strftime("%H:%M")
     time = datetime.strptime(now, "%H:%M")
 
