@@ -131,7 +131,7 @@ def send_message(message):
     if message.text.lower() == ('справка'):
        mess = (f'Приветствую вас, <b>{message.from_user.first_name}</b>, Вот все запросы на которые я знаю ответ. '
                f'Пришлите мне нужный вам запрос из списка, так же как написано там: '
-               f'Расписание, ближайший автобус')
+               f'Расписание, ближайший автобус, как доехать до остановки')
        bot.reply_to(message, mess, parse_mode='html')
 
     if message.text.lower() == ('расписание'):
@@ -212,7 +212,6 @@ def send_message(message):
     if message.text.lower() == ('драм театр'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsTRJyj")
 
-
     if message.text.lower() == ('восход'):
         mess = (f'Доехать до остановки "восход" можно на маршрутах: 1, 4, 4а, 6, 10, 14, 15, 17, 19, 20, 21, 22, 23, '
                 f'25, 103, 103у, 104, 118, 119, 122. '
@@ -221,7 +220,6 @@ def send_message(message):
         bot.reply_to(message, mess, parse_mode='html')
     if message.text.lower() == ('восход'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsTR0p-")
-
 
     if message.text.lower() == ('предмостная'):
         mess = (f'Доехать до остановки "предмостная" можно на маршрутах: 1, 3, 4, 4а, 6, 10, 13, 14, 15, 17, 19, 20, 21,'
@@ -232,7 +230,6 @@ def send_message(message):
     if message.text.lower() == ('предмостная'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsTZGO0")
 
-
     if message.text.lower() == ('золотой ключик'):
         mess = (f'Доехать до остановки "золотой ключик" можно на маршрутах: 3, 13, 20, 24'
                 f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
@@ -240,7 +237,6 @@ def send_message(message):
         bot.reply_to(message, mess, parse_mode='html')
     if message.text.lower() == ('золотой ключик'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsT6XjJ")
-
 
     if message.text.lower() == ('лицей 1'):
         mess = (f'Доехать до остановки "лицей 1" можно на маршрутах: 3, 13, 20, 24'
@@ -298,7 +294,6 @@ def send_message(message):
     if message.text.lower() == ('семиполатинский лзу'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsTr2lt")
 
-
     if message.text.lower() == ('ново-канский лпх'):
         mess = (f'Доехать до остановки "Ново-Канский ЛПХ" можно на маршруте: 13'
                 f'Чтобы посмотреть его расписание пришлите мне цифру 13. Чтобы посмотреть где находится на карте '
@@ -306,7 +301,6 @@ def send_message(message):
         bot.reply_to(message, mess, parse_mode='html')
     if message.text.lower() == ('ново-канский лпх'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsTvZ5r")
-
 
     if message.text.lower() == ('стрижевой'):
         mess = (f'Доехать до остановки "стрижевой" можно на маршруте: 13'
@@ -316,7 +310,6 @@ def send_message(message):
     if message.text.lower() == ('стрижевой'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsTv8yT")
 
-
     if message.text.lower() == ('дрсу-3'):
         mess = (f'Доехать до остановки "ДРСУ-3" можно на маршруте: 13'
                 f'Чтобы посмотреть его расписание пришлите мне цифру 13. Чтобы посмотреть где находится на карте '
@@ -324,7 +317,6 @@ def send_message(message):
         bot.reply_to(message, mess, parse_mode='html')
     if message.text.lower() == ('дрсу-3'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDsTvXLy")
-
 
     if message.text.lower() == ('подсобное'):
         mess = (f'Доехать до остановки "подсобное" можно на маршруте: 13'
@@ -343,20 +335,20 @@ def send_message(message):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDspIJZr")
 
     if message.text.lower() == ('соленое'):
-        mess = (f'Доехать до остановки "соленое" можно на маршруте: 24'
+        mess = (f'Доехать до остановки "соленое" можно на маршруте: 24. '
                 f'Чтобы посмотреть его расписание пришлите мне цифру 24. Чтобы посмотреть где находится на карте '
                 f'данная остановка, нажмите на геометку ниже')
         bot.reply_to(message, mess, parse_mode='html')
     if message.text.lower() == ('соленое'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspI294")
+        bot.reply_to(message, "https://yandex.ru/maps/-/CDsteY1c")
 
     if message.text.lower() == ('абанское кладбище'):
         mess = (f'Доехать до остановки "абанское кладбище" можно на маршруте: 19'
                 f'Чтобы посмотреть его расписание пришлите мне цифру 19. Чтобы посмотреть где находится на карте '
                 f'данная остановка, нажмите на геометку ниже')
         bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('соленое'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspMGpG")
+    if message.text.lower() == ('абанское кладбище'):
+        bot.reply_to(message, "https://yandex.ru/maps/-/CDsteVig")
 
     if message.text.lower() == ('пед.колледж'):
         mess = (f'Доехать до остановки "Пед.колледж" можно на маршрутах: 4, 6, 14, 15, 25, 122. '
