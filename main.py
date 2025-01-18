@@ -539,7 +539,7 @@ def send_message(message):
                 f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
                 f'данная остановка, нажмите на геометку ниже')
         bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('Эйдемана'):
+    if message.text.lower() == ('эйдемана'):
         bot.reply_to(message, "https://yandex.ru/maps/-/CDspfWJ8")
 
     if message.text.lower() == ('гор.сад'):
