@@ -1052,10 +1052,6 @@ def send_message(message):
         text = f"Графики выходного дня"
         bot.send_photo(message.chat.id, open('21.2.jpg', 'rb'), caption=text, parse_mode="HTML", reply_to_message_id=message.message_id)
 
-    if message.text == "21":
-        text1 = f"Графики выходного дня"
-        bot.send_photo(message.chat.id, open('21.3.jpg', 'rb'), caption=text1, parse_mode="HTML", reply_to_message_id=message.message_id)
-
     if message.text == "22":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('22.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('22.2.jpg', 'rb')),
