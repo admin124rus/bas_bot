@@ -866,7 +866,35 @@ def send_message(message):
         bot.reply_to(message, солнечный21вых)
     if message.text.lower() == ('ближайший автобус солнечный'):
         bot.reply_to(message, солнечный22)
-    
+
+
+    if message.text.lower() == ('дачные'):
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4.1.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('4.2.jpg', 'rb'))],
+                                               reply_to_message_id=message.message_id)
+    if message.text.lower() == ('дачные'):
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4а.1.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('4а.2.jpg', 'rb'))],
+                                               reply_to_message_id=message.message_id)
+    if message.text.lower() == ('дачные'):
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('5.1дачные.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('5.2дачные.jpg', 'rb'))],
+                                               reply_to_message_id=message.message_id)
+    if message.text.lower() == ('дачные'):
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('6.1.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('6.2.jpg', 'rb'))],
+                                               reply_to_message_id=message.message_id)
+    if message.text.lower() == ('дачные'):
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('10.1.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('10.2.jpg', 'rb'))],
+                                               reply_to_message_id=message.message_id)
+    if message.text.lower() == ('дачные'):
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('14.1.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('14.2.jpg', 'rb'))],
+                                               reply_to_message_id=message.message_id)
+    if message.text.lower() == ('дачные'):
+        bot.send_photo(message.chat.id, open('23.jpg', 'rb'), reply_to_message_id=message.message_id)
+
 
     if message.text == "1":
         bot.send_photo(message.chat.id, open('1.jpg', 'rb'), reply_to_message_id=message.message_id)
@@ -874,11 +902,11 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('3.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('3.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "":
+    if message.text == "4":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('4.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "":
+    if message.text == "4а":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4а.1.jpg', 'rb')),
                                               telebot.types.InputMediaPhoto(open('4а.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
@@ -886,7 +914,7 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('5.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('5.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "":
+    if message.text == "6":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('6.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('6.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
@@ -909,7 +937,7 @@ def send_message(message):
                                                telebot.types.InputMediaPhoto(open('13.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('13.3.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "":
+    if message.text == "14":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('14.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('14.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
