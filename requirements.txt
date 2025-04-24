@@ -1,7 +1,13 @@
 certifi==2024.2.2
 charset-normalizer==3.3.2
+distlib==0.3.9
+dotenv==0.9.9
+filelock==3.18.0
 idna==3.7
+platformdirs==4.3.7
 pyTelegramBotAPI==4.17.0
+python-dotenv==1.1.0
+pytz==2024.1
 requests==2.31.0
 urllib3==2.2.1
-pytz==2024.1
+virtualenv==20.30.0
