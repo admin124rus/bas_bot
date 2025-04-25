@@ -901,6 +901,9 @@ def send_message(message):
     if message.text.lower() == ('дачные'):
         bot.send_photo(message.chat.id, open('23.jpg', 'rb'), reply_to_message_id=message.message_id)
 
+    if message.text.lower() == ('дачные'):
+        bot.send_photo(message.chat.id, open('25.jpg', 'rb'), reply_to_message_id=message.message_id)
+
 
     if message.text == "1":
         bot.send_photo(message.chat.id, open('1.jpg', 'rb'), reply_to_message_id=message.message_id)
