@@ -12,6 +12,7 @@ from datetime import datetime
 import bisect
 
 
+
 солка22 = ["6:28", "6:46", "7:14", "7:24", "7:35", "8:01", "8:23", "8:44", "9:01", "9:23", "9:37", "10:11", "10:41",
            "11:16", "11:27", "12:00", "12:20", "12:48", "13:00", "13:14", "13:37", "14:04", "14:38", "14:48", "15:35",
            "16:00", "16:20", "16:40", "16:55", "17:15", "17:45", "18:08", "18:20", "18:41", "19:16", "19:35", "20:23",
@@ -984,7 +985,7 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('24.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('24.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "":
+    if message.text == "25":
         bot.send_photo(message.chat.id, open('25.jpg', 'rb'), reply_to_message_id=message.message_id)
     if message.text == "103":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('103.1.jpg', 'rb')),
