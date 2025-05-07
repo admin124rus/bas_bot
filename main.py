@@ -950,7 +950,7 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('14.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('14.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "15":
+    if message.text == "":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('15.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('15.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('15.3.jpg', 'rb')),
