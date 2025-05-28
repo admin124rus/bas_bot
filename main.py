@@ -915,7 +915,7 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('4.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "4а":
+    if message.text.lower() == "4а":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4а.1.jpg', 'rb')),
                                               telebot.types.InputMediaPhoto(open('4а.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
