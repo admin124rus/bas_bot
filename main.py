@@ -911,19 +911,19 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('3.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('3.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "4":
+    if message.text == "":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('4.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text.lower() == "4а":
+    if message.text.lower() == "":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4а.1.jpg', 'rb')),
                                               telebot.types.InputMediaPhoto(open('4а.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
     if message.text == "5":
-        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('5.1дачные.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('5.2дачные.jpg', 'rb'))],
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('5.1.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('5.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "6":
+    if message.text == "":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('6.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('6.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
@@ -946,7 +946,7 @@ def send_message(message):
                                                telebot.types.InputMediaPhoto(open('13.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('13.3.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "14":
+    if message.text == "":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('14.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('14.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
