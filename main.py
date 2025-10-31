@@ -7,7 +7,6 @@ load_dotenv()
 
 bot = telebot.TeleBot(os.getenv('TOKEN'))
 
-
 from datetime import datetime
 import bisect
 
@@ -743,28 +742,24 @@ def send_message(message):
          текстилка22_1 = "нет ближайшего времени"
 
     if message.text.lower() == ('ближайший 22'):
-        mess = (f'Выберите остановку и напишите ее так же как написано тут: солнечный 22, текстильщик, предмостная 22, вокзал 22,'
+        mess = (f'Выберите остановку и напишите ее так же как написано тут: солнечный 22, предмостная 22, вокзал 22,'
                 f' политехнический, строителей')
         bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('солнечный 22'):
+    if message.text.lower() == (''):
         bot.reply_to(message, солнечный22)
-    if message.text.lower() == ('текстильщик'):
-        bot.reply_to(message, текстилка22)
-    if message.text.lower() == ('текстильщик'):
-        bot.reply_to(message, текстилка22_1)
-    if message.text.lower() == ('предмостная 22'):
+    if message.text.lower() == (''):
         bot.reply_to(message, канпер22)
-    if message.text.lower() == ('предмостная 22'):
+    if message.text.lower() == (''):
         bot.reply_to(message, канпер22_1)
-    if message.text.lower() == ('вокзал 22'):
+    if message.text.lower() == (''):
         bot.reply_to(message, вокзал22)
-    if message.text.lower() == ('вокзал 22'):
+    if message.text.lower() == (''):
         bot.reply_to(message, вокзал22_1)
-    if message.text.lower() == ('политехнический'):
+    if message.text.lower() == (''):
         bot.reply_to(message, политех22)
-    if message.text.lower() == ('политехнический'):
+    if message.text.lower() == (''):
         bot.reply_to(message, политех22_1)
-    if message.text.lower() == ('строителей'):
+    if message.text.lower() == (''):
         bot.reply_to(message, поселок22_1)
 
     date_now = datetime.now()
@@ -977,10 +972,7 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('22.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('22.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('22.3.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('22.4.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('22.5.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('22.6.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('22.7.jpg', 'rb'))],
+                                               telebot.types.InputMediaPhoto(open('22.4.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
     if message.text == "23":
         bot.send_photo(message.chat.id, open('23.jpg', 'rb'), reply_to_message_id=message.message_id)
@@ -988,7 +980,7 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('24.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('24.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "25":
+    if message.text == "":
         bot.send_photo(message.chat.id, open('25.jpg', 'rb'), reply_to_message_id=message.message_id)
     if message.text == "103":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('103.1.jpg', 'rb')),
