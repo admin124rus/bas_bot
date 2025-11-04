@@ -734,7 +734,7 @@ def send_message(message):
         bot.reply_to(message, политех22)
     if message.text.lower() == ('политехнический'):
         bot.reply_to(message, политех22_1)
-    if message.text.lower() == ('строителей '):
+    if message.text.lower() == ('строителей'):
         bot.reply_to(message, поселок22_1)
 
     date_now = datetime.now()
