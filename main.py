@@ -776,13 +776,13 @@ def send_message(message):
     if message.text.lower() == ('ближайший 20'):
         mess = (f'Выберите остановку и напишите ее так же как написано тут: солнечный 20, предмостная 20, сосновый')
         bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('солнечный 20'):
+    if message.text.lower() == (''):
         bot.reply_to(message, солнечный20)
-    if message.text.lower() == ('предмостная 20'):
+    if message.text.lower() == (''):
         bot.reply_to(message, канпер20)
-    if message.text.lower() == ('сосновый'):
+    if message.text.lower() == (''):
         bot.reply_to(message, сосновый20_1)
-    if message.text.lower() == ('предмостная 20'):
+    if message.text.lower() == (''):
         bot.reply_to(message, канпер20_1)
 
 
@@ -934,7 +934,8 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('20.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('20.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('20.3.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('20.4.jpg', 'rb'))],
+                                               telebot.types.InputMediaPhoto(open('20.4.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('20.5.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
 
     if message.text == "21":
