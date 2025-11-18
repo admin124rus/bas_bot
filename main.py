@@ -1,7 +1,8 @@
 import telebot
-import pytz
+from telebot import types
 from dotenv import load_dotenv
 import os
+import pytz
 
 load_dotenv()
 
@@ -46,21 +47,23 @@ import bisect
 
 
 
-солка20 = ["6:26", "6:46", "7:13", "7:30", "7:50", "8:20", "8:40", "9:00", "9:40", "10:40", "11:00", "11:26", "12:04",
-        "12:26", "12:46", "13:10", "13:35", "13:50", "14:10", "14:49", "15:15", "16:00", "16:20", "17:08", "17:20",
-        "18:00", "18:20", "19:00", "19:30", "20:00", "21:00"]
+солка20 = ["6:26", "6:46", "7:06", "7:30", "7:50", "8:08", "8:40", "9:00", "9:18", "9:32", "10:40", "11:00", "11:20",
+           "11:44", "12:04", "12:26", "12:46", "13:10", "13:26", "13:46", "14:10", "14:29", "14:49", "15:15", "15:37",
+           "16:08", "16:20", "16:42", "17:08", "17:33", "18:00", "18:32", "19:00", "19:28", "20:00", "20:29", "21:00"]
 
-предм20 = ["6:41", "7:01", "7:28", "7:45", "8:05", "8:35", "8:55", "9:15", "9:55", "10:55", "11:15", "11:41", "12:19",
-        "12:41", "13:01", "13:25", "13:50", "14:05", "14:25", "15:04", "15:30", "16:15", "16:35", "17:23", "17:35",
-        "18:15", "18:35", "19:15", "19:45", "20:15", "21:15"]
+предм20 = ["06:41", "07:01", "07:21", "07:45", "08:05", "08:21", "08:55", "09:15", "09:31", "09:47", "10:55", "11:15",
+           "11:35", "11:59", "12:19", "12:41", "13:01", "13:25", "13:41", "14:01", "14:25", "14:44", "15:04", "15:30",
+           "15:51", "16:23", "16:35", "16:57", "17:23", "17:48", "18:15", "18:47", "19:15", "19:43", "20:15", "20:44",
+           "21:15"]
 
-сосно20_1 = ["6:58", "7:17", "7:45", "8:02", "8:22", "8:52", "9:12", "9:30", "10:10", "11:12", "11:32", "11:56", "12:35",
-        "13:00", "13:16", "13:40", "14:07", "14:22", "14:42", "15:22", "15:47", "16:32", "16:52", "17:40", "17:52",
-        "18:30", "18:55", "19:30", "20:05", "20:30", "21:30"]
+сосно20_1 = ["6:58", "7:17", "7:38", "8:02", "8:22", "8:48", "9:12", "9:30", "9:48", "10:10", "11:12", "11:32", "11:56",
+             "12:15", "12:35", "12:56", "13:16", "13:40", "13:57", "14:18", "14:42", "15:06", "15:22", "15:47", "16:10",
+             "16:38", "16:52", "17:17", "17:50", "18:03", "18:30", "19:03", "19:30", "19:59", "20:30", "21:00", "21:30"]
 
-предм20_1 = ["7:13", "7:33", "8:00", "8:17", "8:37", "9:07", "9:27", "9:45", "10:25", "11:27", "11:47", "12:11", "12:50",
-             "13:15", "13:31", "13:55", "14:22", "14:37", "14:57", "15:37", "16:02", "16:47", "17:07", "17:55", "18:07",
-             "18:45", "19:10", "19:45", "20:20", "20:45", "21:45"]
+предм20_1 = ["07:13", "07:33", "07:53", "08:17", "08:37", "09:01", "09:27", "09:45", "10:01", "10:25", "11:17", "11:47",
+             "12:11", "12:30", "12:50", "13:11", "13:31", "13:55", "14:12", "14:33", "14:57", "15:21", "15:37", "16:02",
+             "16:25", "16:53", "17:07", "17:32", "18:05", "18:17", "18:45", "19:18", "19:45", "20:14", "20:45", "21:15",
+             "21:45"]
 
 
 солка21вых = ["6:17", "6:40", "7:05", "7:20", "7:40", "7:53", "8:10", "8:27", "8:40", "8:55", "9:07", "9:30", "9:45", "10:02",
@@ -89,38 +92,132 @@ import bisect
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    mess = (f'Приветствую вас, <b>{message.from_user.first_name}</b>, Вот все запросы расписания на которые я знаю '
-            f'ответы: 1, 3, 4, 4а, 5, 6, 8, 9, 10...119, 122, Канск-Иланск, пригородные, междугородные, Иланск, '
-            f'Иланск-Красноярск, Красноярск-Восток. Чтобы я вам ответил, пришлите мне цифру или название маршрута из '
-            f'списка выше. Так же я пока что знаю ближайшее время маршрутов 20, 21 и 22 , а так же ближайшее время разом '
-            f'всех этих маршрутов с остановки "солнечный". Чтобы узнать ближайшее время просто отправьте мне запрос '
-            f'"ближайшее время № маршрута", либо "ближайший автобус солнечный", в ближайшем будущем админ меня доработает'
-            f'и добавит в меня ближайшее время всех маршрутов города')
-    bot.reply_to(message, mess, parse_mode='html')
+    mess = (f'Приветствую вас , <b>{message.from_user.first_name}</b> 👋 . Тут вы можете найти все расписание города,'
+            f'района, а так же пригородное и междугородное расписание. Используйте кнопу меню, чтобы найти нужный вам'
+            f'маршрут')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button1)
+    bot.reply_to(message, mess, reply_markup=keyboard, parse_mode='html')
+
+@bot.message_handler(func=lambda message: message.text == '🚍 Меню 🚍')
+def menu(message):
+    mess = ('⬇️ Выберите пункт ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton('📜 Расписание')
+    button2 = types.KeyboardButton('🚌 Ближайший автобус')
+    button3 = types.KeyboardButton('❓ Как доехать до остановки')
+    keyboard.row(button1, button2).add(button3)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == '📜 Расписание')
+def raspisanie(message):
+    mess = ('⬇️ Выберите категорию маршрутов ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("🟢Городские")
+    button2 = types.KeyboardButton("🟢Пригородные")
+    button3 = types.KeyboardButton("🟢Междугородные")
+    button4 = types.KeyboardButton("🟢Иланск")
+    button5 = types.KeyboardButton("🟢Красноярск-восток")
+    button6 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2).add(button3, button4).add(button5, button6)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == '🟢Городские')
+def raspisanie(message):
+    mess = ('⬇️ Выберите маршрут ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button2 = types.KeyboardButton("3️⃣")
+    button3 = types.KeyboardButton("5️⃣")
+    button4 = types.KeyboardButton("8️⃣")
+    button5 = types.KeyboardButton("9️⃣")
+    button6 = types.KeyboardButton("1️⃣0️⃣")
+    button7 = types.KeyboardButton("1️⃣3️⃣")
+    button8 = types.KeyboardButton("1️⃣️️5️⃣")
+    button9 = types.KeyboardButton("1️⃣7️⃣")
+    button10 = types.KeyboardButton("1️⃣9️⃣")
+    button11 = types.KeyboardButton("2️⃣0️⃣")
+    button12 = types.KeyboardButton("2️⃣1️⃣")
+    button13 = types.KeyboardButton("2️⃣2️⃣")
+    button14 = types.KeyboardButton("2️⃣3️⃣")
+    button15 = types.KeyboardButton("2️⃣4️⃣")
+    button16 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button17 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button18 = types.KeyboardButton("1️⃣0️⃣️5️⃣")
+    button19 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button20 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button21 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button22 = types.KeyboardButton("📜 Расписание")
+    button23 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button1, button2, button3, button4,  button5,  button6,  button7,  button8,  button9, button10,
+                 button11, button12, button13,  button14,  button15,  button16,  button17, button18, button19, button20,
+                 button21, button22,  button23)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == '🚌 Ближайший автобус')
+def bas(message):
+    mess = ('⬇️ Выберите маршрут ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("Ближайший 20")
+    button2 = types.KeyboardButton("Ближайший 21")
+    button3 = types.KeyboardButton("Ближайший 22")
+    button4 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2).add(button3, button4)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == '↩️ Назад')
+def назад(message):
+    mess = ('⬇️ Выберите маршрут ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("Ближайший 20")
+    button2 = types.KeyboardButton("Ближайший 21")
+    button3 = types.KeyboardButton("Ближайший 22")
+    button4 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2).add(button3, button4)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == 'Ближайший 20')
+def ближайший_21(message):
+    mess = ('⬇️ Выберите остановку ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("Солнечный 20")
+    button2 = types.KeyboardButton("Предмостная 20")
+    button3 = types.KeyboardButton("Сосновый")
+    button4 = types.KeyboardButton("↩️ Назад")
+    button5 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2, ).add(button3, button4).add(button5)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == 'Ближайший 21')
+def ближайший_21(message):
+    mess = ('⬇️ Выберите остановку ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("Солнечный 21")
+    button2 = types.KeyboardButton("Мелькомбинат")
+    button3 = types.KeyboardButton("↩️ Назад")
+    button4 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2).add(button3, button4)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == 'Ближайший 22')
+def ближайший_22(message):
+    mess = ('⬇️ Выберите остановку ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("Солнечный 22")
+    button2 = types.KeyboardButton("Предмостная 22")
+    button3 = types.KeyboardButton("Вокзал 22")
+    button4 = types.KeyboardButton("Политехнический")
+    button5 = types.KeyboardButton("Строителей")
+    button6 = types.KeyboardButton("↩️ Назад")
+    button7 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2).add(button3, button4).add(button5, button6).add(button7)
+    bot.reply_to(message, mess, reply_markup=keyboard)
 
 @bot.message_handler(content_types=["text"])
 def send_message(message):
-    if message.text.lower() == ('справка'):
-       mess = (f'Приветствую вас, <b>{message.from_user.first_name}</b>, Вот все запросы на которые я знаю ответ. '
-               f'Пришлите мне нужный вам запрос из списка, так же как написано там: '
-               f'Расписание, ближайший автобус, как доехать до остановки')
-       bot.reply_to(message, mess, parse_mode='html')
 
-    if message.text.lower() == ('расписание'):
-       mess = (f'Вот все запросы расписания на которые я знаю ответы. Пришлите мне нужную вам цифру или название маршрута '
-               f'из списка так же как написано там: 1, 3, 4, 4а, 5, 6, 8, 9, 10, 13, 14, 17, 19, 20, 21, 22, 23, 24, 25,'
-               f'103, 104, 105, 118, 119, 122, Канск-Иланск, пригородные, междугородные, Иланск, Иланск-Красноярск, Красноярск-Восток')
-       bot.reply_to(message, mess, parse_mode='html')
-
-    if message.text.lower() == ('ближайший автобус'):
-       mess = (f'Здесь вы можете узнать ближайшее время какого либо маршрута на текущее время запроса. Пока что я знаю '
-               f'ближайшее время еще мало маршрутов, в будущем список будет больше. Чтобы узнать ближайшее '
-               f'время пришлите мне запрос как указано в кавычках, все номера маршрутов, на которые я знаю ответ '
-               f'указаны в списке. "ближайший №" №: 20, 21, 22. Так же я знаю ближайшее время всех этих маршрутов с '
-               f'остановки солнечный, просто прищлите мне запрос как у казано в кавычках "ближайший автобус солнечный"')
-       bot.reply_to(message, mess, parse_mode='html')
-
-    if message.text.lower() == ('как доехать до остановки'):
+    if message.text.lower() == ('❓ как доехать до остановки'):
         mess = (f'Вот весь список остановок на которые я могу дать ответ. Пришлите мне нужную вам остановку из списка и '
                 f'напишите ее так же как написано там, не учитывая скобки: солнечный, '
                 f'МЖК, Северо-Западный, ремзавод, стадион текстильщик, драм театр (Порт - Артур), восход, предмостная, '
@@ -776,13 +873,13 @@ def send_message(message):
     if message.text.lower() == ('ближайший 20'):
         mess = (f'Выберите остановку и напишите ее так же как написано тут: солнечный 20, предмостная 20, сосновый')
         bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == (''):
+    if message.text.lower() == ('солнечный 20'):
         bot.reply_to(message, солнечный20)
-    if message.text.lower() == (''):
+    if message.text.lower() == ('предмостная 20'):
         bot.reply_to(message, канпер20)
-    if message.text.lower() == (''):
+    if message.text.lower() == ('сосновый'):
         bot.reply_to(message, сосновый20_1)
-    if message.text.lower() == (''):
+    if message.text.lower() == ('предмостная 20'):
         bot.reply_to(message, канпер20_1)
 
 
@@ -875,9 +972,9 @@ def send_message(message):
         bot.send_photo(message.chat.id, open('25.jpg', 'rb'), reply_to_message_id=message.message_id)
 
 
-    if message.text == "1":
+    if message.text == "1️⃣":
         bot.send_photo(message.chat.id, open('1.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "3":
+    if message.text == "3️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('3.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('3.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
@@ -889,7 +986,7 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4а.1.jpg', 'rb')),
                                               telebot.types.InputMediaPhoto(open('4а.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "5":
+    if message.text == "5️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('5.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('5.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
@@ -898,20 +995,20 @@ def send_message(message):
                                                telebot.types.InputMediaPhoto(open('6.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
 
-    if message.text == "8":
+    if message.text == "8️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('8.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('8.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "9":
+    if message.text == "9️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('9.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('9.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "10":
+    if message.text == "1️⃣0️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('10.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('10.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
 
-    if message.text == "13":
+    if message.text == "1️⃣3️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('13.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('13.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('13.3.jpg', 'rb'))],
@@ -920,17 +1017,17 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('14.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('14.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "15":
+    if message.text == "1️⃣️️5️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('15.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('15.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('15.3.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('15.4.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "17":
+    if message.text == "1️⃣7️⃣":
         bot.send_photo(message.chat.id, open('17.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "19":
+    if message.text == "1️⃣9️⃣":
         bot.send_photo(message.chat.id, open('19.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "20":
+    if message.text == "2️⃣0️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('20.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('20.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('20.3.jpg', 'rb')),
@@ -938,68 +1035,74 @@ def send_message(message):
                                                telebot.types.InputMediaPhoto(open('20.5.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
 
-    if message.text == "21":
+    if message.text == "2️⃣1️⃣":
         bot.send_photo(message.chat.id, open('21.1.jpg', 'rb'),reply_to_message_id=message.message_id)
-    if message.text == "21":
+    if message.text == "2️⃣1️⃣":
         text = f"Графики выходного дня"
         bot.send_photo(message.chat.id, open('21.2.jpg', 'rb'), caption=text, parse_mode="HTML", reply_to_message_id=message.message_id)
 
-    if message.text == "22":
+    if message.text == "2️⃣2️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('22.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('22.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('22.3.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('22.4.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "23":
+    if message.text == "2️⃣3️⃣":
         bot.send_photo(message.chat.id, open('23.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "24":
+    if message.text == "2️⃣4️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('24.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('24.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
     if message.text == "":
         bot.send_photo(message.chat.id, open('25.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "103":
+    if message.text == "1️⃣0️⃣3️":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('103.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('103.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text == "104":
+    if message.text == "1️⃣0️⃣4️⃣":
         bot.send_photo(message.chat.id, open('104.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "105":
+    if message.text == "1️⃣0️⃣️5️⃣":
         bot.send_photo(message.chat.id, open('105.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "118":
+    if message.text == "1️⃣1️⃣8️⃣":
         bot.send_photo(message.chat.id, open('118.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "119":
+    if message.text == "1️⃣1️⃣9️⃣":
         bot.send_photo(message.chat.id, open('119.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "122":
+    if message.text == "1️⃣2️⃣2️⃣":
         bot.send_photo(message.chat.id, open('122.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text.lower() == "канск-иланск":
+    if message.text.lower() == "🟢пригородные":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('141.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('141.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('141.3.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('141.4.jpg', 'rb'))],
+                                               telebot.types.InputMediaPhoto(open('141.4.jpg', 'rb'),
+                                                                                  caption='Маршрут Канск- Иланский')],
                                                reply_to_message_id=message.message_id)
-    if message.text.lower() == "пригородные":
+    if message.text.lower() == "🟢пригородные":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('пригород1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('пригород2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text.lower() == "междугородные":
+    if message.text.lower() == "🟢междугородные":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('межгород1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('межгород2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('межгород3.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
-    if message.text.lower() == "иланск":
+    if message.text.lower() == "🟢иланск":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('иланск1.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('иланск1.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('иланск1.3.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('иланск2.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('иланск2.2.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('иланск3.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('иланск129.jpg', 'rb'))],
+                                               telebot.types.InputMediaPhoto(open('иланск129.jpg', 'rb'),
+                                                                                  caption='Маршруты по городу')],
                                                reply_to_message_id=message.message_id)
-    if message.text.lower() == "иланск-красноярск":
-        bot.send_photo(message.chat.id, open('иланск красноярск.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text.lower() == "красноярск-восток":
-        bot.send_photo(message.chat.id, open('красноярсквосток.jpg', 'rb'), reply_to_message_id=message.message_id)
+
+    if message.text.lower() == "🟢иланск":
+        text = f"Маршруты Иланск - Красноярск"
+        bot.send_photo(message.chat.id, open('иланск красноярск.jpg', 'rb'), caption=text, parse_mode="HTML",
+                                                                             reply_to_message_id=message.message_id)
+
+    if message.text.lower() == "🟢красноярск-восток":
+        bot.send_photo(message.chat.id, open('красноярск-восток.png', 'rb'), reply_to_message_id=message.message_id)
 
 
 
