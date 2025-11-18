@@ -1055,7 +1055,7 @@ def send_message(message):
                                                reply_to_message_id=message.message_id)
     if message.text == "":
         bot.send_photo(message.chat.id, open('25.jpg', 'rb'), reply_to_message_id=message.message_id)
-    if message.text == "1️⃣0️⃣3️":
+    if message.text == "1️⃣0️⃣3️⃣":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('103.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('103.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
