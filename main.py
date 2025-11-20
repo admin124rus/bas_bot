@@ -102,7 +102,7 @@ def menu(message):
 @bot.message_handler(func=lambda message: message.text == '🚍 Меню 🚍')
 def menu(message):
     mess = ('⬇️ Выберите пункт ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton('📜 Расписание')
     button2 = types.KeyboardButton('🚌 Ближайший автобус')
     button3 = types.KeyboardButton('❓ Как доехать до остановки')
@@ -112,7 +112,7 @@ def menu(message):
 @bot.message_handler(func=lambda message: message.text == '📜 Расписание')
 def raspisanie(message):
     mess = ('⬇️ Выберите категорию маршрутов ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("🟢Городские")
     button2 = types.KeyboardButton("🟢Пригородные")
     button3 = types.KeyboardButton("🟢Междугородные")
@@ -125,7 +125,7 @@ def raspisanie(message):
 @bot.message_handler(func=lambda message: message.text == '🟢Городские')
 def raspisanie(message):
     mess = ('⬇️ Выберите маршрут ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("1️⃣")
     button2 = types.KeyboardButton("3️⃣")
     button3 = types.KeyboardButton("5️⃣")
@@ -157,7 +157,7 @@ def raspisanie(message):
 @bot.message_handler(func=lambda message: message.text == '🚌 Ближайший автобус')
 def bas(message):
     mess = ('⬇️ Выберите маршрут ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("Ближайший 20")
     button2 = types.KeyboardButton("Ближайший 21")
     button3 = types.KeyboardButton("Ближайший 22")
@@ -168,7 +168,7 @@ def bas(message):
 @bot.message_handler(func=lambda message: message.text == '↩️ Назад')
 def назад(message):
     mess = ('⬇️ Выберите маршрут ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("Ближайший 20")
     button2 = types.KeyboardButton("Ближайший 21")
     button3 = types.KeyboardButton("Ближайший 22")
@@ -179,7 +179,7 @@ def назад(message):
 @bot.message_handler(func=lambda message: message.text == 'Ближайший 20')
 def ближайший_21(message):
     mess = ('⬇️ Выберите остановку ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("Солнечный 20")
     button2 = types.KeyboardButton("Предмостная 20")
     button3 = types.KeyboardButton("Сосновый")
@@ -191,7 +191,7 @@ def ближайший_21(message):
 @bot.message_handler(func=lambda message: message.text == 'Ближайший 21')
 def ближайший_21(message):
     mess = ('⬇️ Выберите остановку ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("Солнечный 21")
     button2 = types.KeyboardButton("Мелькомбинат")
     button3 = types.KeyboardButton("↩️ Назад")
@@ -202,7 +202,7 @@ def ближайший_21(message):
 @bot.message_handler(func=lambda message: message.text == 'Ближайший 22')
 def ближайший_22(message):
     mess = ('⬇️ Выберите остановку ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("Солнечный 22")
     button2 = types.KeyboardButton("Предмостная 22")
     button3 = types.KeyboardButton("Вокзал 22")
