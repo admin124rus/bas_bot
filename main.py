@@ -125,7 +125,7 @@ import bisect
 def menu(message):
     mess = (f'Приветствую вас , <b>{message.from_user.first_name}</b> 👋 . Тут вы можете найти все расписание города,'
             f'района, а так же пригородное и междугородное расписание. Используйте кнопу меню, чтобы найти нужный вам маршрут')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton("🚍 Меню 🚍")
     keyboard.add(button1)
     bot.reply_to(message, mess, reply_markup=keyboard, parse_mode='html')
@@ -143,7 +143,7 @@ def menu(message):
 @bot.message_handler(func=lambda message: message.text == '📜 Расписание')
 def raspisanie(message):
     mess = ('⬇️ Выберите категорию маршрутов ⬇️')
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     button1 = types.KeyboardButton("🟢Городские")
     button2 = types.KeyboardButton("🟢Пригородные")
     button3 = types.KeyboardButton("🟢Междугородные")
