@@ -285,11 +285,8 @@ def create_stop_keyboard():
 
 @bot.message_handler(func=lambda message: message.text.lower() == 'как доехать до остановки ❓')
 def handle_stop_request(message):
-    bot.send_message(
-        message.chat.id,
-        "Выберите нужную остановку из списка ниже:",
-        reply_markup=create_stop_keyboard()
-    )
+    bot.reply_to(message,"Выберите нужную остановку из списка ниже:", reply_markup=create_stop_keyboard())
+    
 @bot.message_handler(func=lambda message: message.text.lower() == 'солнечный')
 def солнечный(message):
     mess = (f'Доехать до остановки "солнечный" можно на маршрутах: 1, 10, 17, 20, 21, 22, 23, 103, 103у, 104, 118,  '
