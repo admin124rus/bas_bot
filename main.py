@@ -121,6 +121,7 @@ import bisect
 "16:11", "16:20", "16:30", "16:42", "16:52", "17:00", "17:07", "17:15", "17:24", "17:33", "17:41", "17:51", "18:05", "18:20", "18:35",
 "18:53", "19:07", "19:18", "19:30", "19:45", "20:10", "20:32", "21:10", "21:56"]
 
+
 @bot.message_handler(commands=['menu'])
 def menu(message):
     mess = (f'Приветствую вас , <b>{message.from_user.first_name}</b> 👋 . Тут вы можете найти все расписание города,'
@@ -136,7 +137,7 @@ def menu(message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     button1 = types.KeyboardButton('📜 Расписание')
     button2 = types.KeyboardButton('🚌 Ближайший автобус')
-    button3 = types.KeyboardButton('❓ Как доехать до остановки')
+    button3 = types.KeyboardButton('Как доехать до остановки ❓')
     keyboard.row(button1, button2).add(button3)
     bot.reply_to(message, mess, reply_markup=keyboard)
 
@@ -154,11 +155,12 @@ def raspisanie(message):
     bot.reply_to(message, mess, reply_markup=keyboard)
 
 @bot.message_handler(func=lambda message: message.text == '🟢Городские')
-def raspisanie(message):
+def gorodskie(message):
     mess = ('⬇️ Выберите маршрут ⬇️')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     button1 = types.KeyboardButton("1️⃣")
     button2 = types.KeyboardButton("3️⃣")
+    button3a = types.KeyboardButton("3️⃣а")
     button3 = types.KeyboardButton("5️⃣")
     button4 = types.KeyboardButton("8️⃣")
     button5 = types.KeyboardButton("9️⃣")
@@ -173,6 +175,7 @@ def raspisanie(message):
     button14 = types.KeyboardButton("2️⃣3️⃣")
     button15 = types.KeyboardButton("2️⃣4️⃣")
     button16 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
     button17 = types.KeyboardButton("1️⃣0️⃣4️⃣")
     button18 = types.KeyboardButton("1️⃣0️⃣️5️⃣")
     button19 = types.KeyboardButton("1️⃣1️⃣8️⃣")
@@ -180,8 +183,8 @@ def raspisanie(message):
     button21 = types.KeyboardButton("1️⃣2️⃣2️⃣")
     button22 = types.KeyboardButton("📜 Расписание")
     button23 = types.KeyboardButton("🚍 Меню 🚍")
-    keyboard.add(button1, button2, button3, button4,  button5,  button6,  button7,  button8,  button9, button10,
-                 button11, button12, button13,  button14,  button15,  button16,  button17, button18, button19, button20,
+    keyboard.add(button1, button2, button3a, button3, button4,  button5,  button6,  button7,  button8,  button9, button10,
+                 button11, button12, button13,  button14,  button15,  button16,  button103u ,  button17, button18, button19, button20,
                  button21, button22,  button23)
     bot.reply_to(message, mess, reply_markup=keyboard)
 
@@ -257,533 +260,1192 @@ def ближайший_22(message):
     keyboard.row(button1, button2).add(button3, button4).add(button5, button6).add(button7)
     bot.reply_to(message, mess, reply_markup=keyboard)
 
+
+stops = [
+    "Солнечный", "МЖК", "Северо - западный", "Ремзавод", "Стадион текстильщик",
+    "Драм театр (порт - артур)", "Восход", "Предмостная", "Золотой ключик (набережная)",
+    "Лицей 1", "Магазин геолог", "Школа 15", "Нефтебаза", "Туб.санаторий", "Сосновый",
+    "семиполатинский лзу (красэко)", "Ново - канский лпх", "Стрижевой", "дрсу - 3",
+    "Подсобное", "Агроснаб", "Соленое", "Абанское кладбище", "Пед.колледж", "Стариково",
+    "Черемушки", "дсу - 4", "ДОСААФ", "ЗЛМК", "ККЗ", "Анцирь", "Чечеул", "Зеленый Луг",
+    "Новый Путь", "Строителей", "Школа 8", "Краевая (гавань)", "БХЗ", "Гор.больница",
+    "Политехнический", "ГИБДД", "Автоколона 1261", "5 городок", "4 городок", "ПАТП",
+    "Мелькомбинат", "Эйдемана", "Гор.сад", "Площадь Коростелева", "Ж/Д вокзал (автовокзал)",
+    "Кинотеатр Космос", "Кинотеатр Север", "Детская больница (север)", "СИЗО", "Мясокомбинат",
+    "Коллекторная ул.", "Кан", "Рассвет", "Бережки", "Левобережное", "Бражное",
+    "Филимоново", "Сухая речка"
+]
+
+def create_stop_keyboard():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    for stop in stops:
+        keyboard.add(types.KeyboardButton(stop))
+    keyboard.add(types.KeyboardButton("🚍 Меню 🚍"))
+    return keyboard
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'как доехать до остановки ❓')
+def handle_stop_request(message):
+    bot.send_message(
+        message.chat.id,
+        "Выберите нужную остановку из списка ниже:",
+        reply_markup=create_stop_keyboard()
+    )
+@bot.message_handler(func=lambda message: message.text.lower() == 'солнечный')
+def солнечный(message):
+    mess = (f'Доехать до остановки "солнечный" можно на маршрутах: 1, 10, 17, 20, 21, 22, 23, 103, 103у, 104, 118,  '
+            f'119. Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button2 = types.KeyboardButton("1️⃣0️⃣")
+    button3 = types.KeyboardButton("1️⃣7️⃣")
+    button4 = types.KeyboardButton("2️⃣0️⃣")
+    button5 = types.KeyboardButton("2️⃣1️⃣")
+    button6 = types.KeyboardButton("2️⃣2️⃣")
+    button7 = types.KeyboardButton("2️⃣3️⃣")
+    button8 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button9 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button10 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button11= types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button12 = types.KeyboardButton("Как доехать до остановки ❓")
+    button13 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2).add(button3, button4).add(button5, button6).add(button7,
+                 button8).add(button9, button10).add(button11).add(button12, button13)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDssv8jS", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'мжк')
+def mjk(message):
+    mess = (f'Доехать до остановки "МЖК" можно на маршрутах: 1, 10 , 17, 20, 21, 22, 23, 103, 103у, 104, 118,  '
+            f'119.  '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button4a = types.KeyboardButton("")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button4a).add(button10, button17).add(button20, button21)
+    keyboard.add(button22, button23).add(button25, button103).add(button103u, button104)
+    keyboard.add(button118, button119).add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTBN4W", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'северо - западный')
+def severo_zapadniy(message):
+    mess = (f'Доехать до остановки "Северо‑Западный" можно на маршрутах: 1, 10, 17, 20, 21, 22, 23, 103, 103у, 104, 118, 119. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button4a = types.KeyboardButton("")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button4a).add(button10, button17).add(button20, button21)
+    keyboard.add(button22, button23).add(button25, button103).add(button103u, button104)
+    keyboard.add(button118, button119).add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTFY4b", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'ремзавод')
+def remzavod(message):
+    mess = (f'Доехать до остановки "Ремзавод" можно на маршрутах: 1, 10, 15, 17, 19, 20, 21, 22, 23, 103, 103у, 104, 118, 119, 122. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button6 = types.KeyboardButton("")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button4).add(button4a, button6).add(button10, button14)
+    keyboard.add(button15, button17).add(button19, button20).add(button21, button22)
+    keyboard.add(button23, button25).add(button103, button103u).add(button104, button118)
+    keyboard.add(button119, button122).add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTJD1x", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'стадион текстильщик')
+def stadion_tekstilschik(message):
+    mess = (f'Доехать до остановки "стадион текстильщик" можно на маршрутах: 1, 10, 15, 17, 19, 20, 21, 22, 23, 103, 103у, 104, 118, 119, 122. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button6 = types.KeyboardButton("")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button4).add(button4a, button6).add(button10, button14)
+    keyboard.add(button15, button17).add(button19, button20).add(button21, button22)
+    keyboard.add(button23, button25).add(button103, button103u).add(button104, button118)
+    keyboard.add(button119, button122).add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTNNyC", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'драм театр (порт - артур)')
+def dram_teatr(message):
+    mess = (f'Доехать до остановки "драм театр" можно на маршрутах: 1, 10, 15, 17, 19, 20, 21, 22, 23, 103, 103у, 104, 118, 119, 122. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button6 = types.KeyboardButton("")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button4).add(button4a, button6).add(button10, button14)
+    keyboard.add(button15, button17).add(button19, button20).add(button21, button22)
+    keyboard.add(button23, button25).add(button103, button103u).add(button104, button118)
+    keyboard.add(button119, button122).add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTRJyj", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'восход')
+def voshod(message):
+    mess = (f'Доехать до остановки "восход" можно на маршрутах: 1, 10, 15, 17, 19, 20, 21, 22, 23, 103, 103у, 104, 118, 119, 122. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button6 = types.KeyboardButton("")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button4).add(button4a, button6).add(button10, button14)
+    keyboard.add(button15, button17).add(button19, button20).add(button21, button22)
+    keyboard.add(button23, button25).add(button103, button103u).add(button104, button118)
+    keyboard.add(button119, button122).add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTR0p-", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'предмостная')
+def predmostnaya(message):
+    mess = (f'Доехать до остановки "предмостная" можно на маршрутах: 1, 3, 10, 13, 15, 17, 19, 20, 21,'
+           f' 22, 23, 24, 103, 103у, 104, 118, 119, 122. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button3 = types.KeyboardButton("3️⃣")
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button6 = types.KeyboardButton("")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button3).add(button4, button4a).add(button6, button10)
+    keyboard.add(button13, button14).add(button15, button17).add(button19, button20)
+    keyboard.add(button21, button22).add(button23, button24).add(button25, button103)
+    keyboard.add(button103u, button104).add(button118, button119).add(button122, button_schedule)
+    keyboard.add(button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTZGO0", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'золотой ключик (набережная)')
+def zolotoy_klyuchik(message):
+    mess = (f'Доехать до остановки "золотой ключик" можно на маршрутах: 3, 13, 20, 24. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button13).add(button20, button24)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsT6XjJ", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'лицей 1')
+def litsey_1(message):
+    mess = (f'Доехать до остановки "лицей 1" можно на маршрутах: 3, 13, 20, 24. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button13).add(button20, button24)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTb4nB", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'магазин геолог')
+def magazin_geolog(message):
+    mess = (f'Доехать до остановки "магазин геолог" можно на маршрутах: 3, 13, 20, 24. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button13).add(button20, button24)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTfEJO", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'школа 15')
+def shkola_15(message):
+    mess = (f'Доехать до остановки "школа 15" можно на маршрутах: 3, 13, 20, 24. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button13).add(button20, button24)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTnEzy", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'нефтебаза')
+def neftebaza(message):
+    mess = (f'Доехать до остановки "нефтебаза" можно на маршрутах: 3, 20. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button20)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTnHKj", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'туб.санаторий')
+def tub_sanatoriy(message):
+    mess = (f'Доехать до остановки "туб.санаторий" можно на маршрутах: 3, 20. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button20)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTrBiq", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'сосновый')
+def sosnovyy(message):
+    mess = (f'Доехать до остановки "сосновый" можно на маршрутах: 3, 20. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button20 = types.KeyboardButton("2️⃣0️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button20)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTrKMn", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'семиполатинский лзу (красэко)')
+def semipolatinskiy_lzu(message):
+    mess = (f'Доехать до остановки "семиполатинский ЛЗУ" можно на маршруте: 13. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button13)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTr2lt", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'ново - канский лпх')
+def novo_kanskiy_lpkh(message):
+    mess = (f'Доехать до остановки "Ново-Канский ЛПХ" можно на маршруте: 13. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button13)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTvZ5r", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'стрижевой')
+def strizhevoy(message):
+    mess = (f'Доехать до остановки "стрижевой" можно на маршруте: 13. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button13)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTv8yT", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'дрсу - 3')
+def drsu_3(message):
+    mess = (f'Доехать до остановки "ДРСУ-3" можно на маршруте: 13. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button13)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTvXLy", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'подсобное')
+def podsobnoe(message):
+    mess = (f'Доехать до остановки "подсобное" можно на маршруте: 13. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button13)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsTzQNq", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'агроснаб')
+def agrosnab(message):
+    mess = (f'Доехать до остановки "агроснаб" можно на маршруте: 24. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button24)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspIJZr", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'соленое')
+def solenoe(message):
+    mess = (f'Доехать до остановки "соленое" можно на маршруте: 24. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button24)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsteY1c", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'абанское кладбище')
+def abanskoe_kladbische(message):
+    mess = (f'Доехать до остановки "абанское кладбище" можно на маршруте: 19. '
+           f'Чтобы посмотреть его расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button19)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsteVig", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'пед.колледж')
+def ped_kolledzh(message):
+    mess = (f'Доехать до остановки "Пед.колледж" можно на маршрутах: 15, 122. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button4 = types.KeyboardButton("")
+    button6 = types.KeyboardButton("")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button25 = types.KeyboardButton("")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button4, button6).add(button14, button15).add(button25, button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspQTPx", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'стариково')
+def starikovo(message):
+    mess = (f'Доехать до остановки "стариково" можно на маршрутах: 4, 25. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button4 = types.KeyboardButton("4️⃣")
+    button25 = types.KeyboardButton("2️⃣5️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button4, button25)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspUCyH", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'черемушки')
+def cheremushki(message):
+    mess = (f'Доехать до остановки "черемушки" можно на маршрутах: 14, 25. '
+           f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+           f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button14 = types.KeyboardButton("1️⃣4️⃣")
+    button25 = types.KeyboardButton("2️⃣5️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button14, button25)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspYMN8", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'дсу - 4')
+def dsu_4(message):
+    mess = (f'Доехать до остановки "ДСУ-4" можно на маршрутах: 15, 122. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button6 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button6, button15).add(button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsp4LJe", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'досааф')
+def dosaaf(message):
+    mess = (f'Доехать до остановки "ДОСААФ" можно на маршрутах: 15, 122. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button6 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button6, button15).add(button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspiAIQ", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'злмк')
+def zlmk(message):
+    mess = (f'Доехать до остановки "ЗЛМК" можно на маршрутах: 15, 122. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button6 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button6, button15).add(button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspiZjw", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'ккз')
+def kkz(message):
+    mess = (f'Доехать до остановки "ККЗ" можно на маршрутах: 15, 122. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button6 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button6, button15).add(button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspiXoS", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'анцирь')
+def ancir(message):
+    mess = (f'Доехать до остановки "Анцирь" можно на маршруте: 122. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspmL8R", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'чечеул')
+def checheul(message):
+    mess = (f'Доехать до остановки "Чечеул" можно на маршрутах: 105, 118. '
+            f'Чтобы посмотреть их расписание, нажмите нужную кнопку в меню ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button105, button118)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspqOit", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'зеленый луг')
+def zelenyj_lug(message):
+    mess = (f'Доехать до остановки "Зеленый Луг" можно на маршруте: 118. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. Чтобы посмотреть, где находится на карте '
+            f'данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button118)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspuUPh", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'новый путь')
+def novy_put(message):
+    mess = (f'Доехать до остановки "Новый Путь" можно на маршруте: 118. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button118)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspyI90", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'строителей')
+def stroiteley(message):
+    mess = (f'Доехать до остановки "Строителей" можно на маршруте: 22. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button22)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspyOkX", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'школа 8')
+def shkola_8(message):
+    mess = (f'Доехать до остановки "Школа 8" можно на маршруте: 9. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button9 = types.KeyboardButton("9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button9)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsp5CP6", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'краевая (гавань)')
+def kraevaya(message):
+    mess = (f'Доехать до остановки "Краевая" можно на маршруте: 9. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button9 = types.KeyboardButton("9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button9)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspBAkO", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'бхз')
+def bhz(message):
+    mess = (f'Доехать до остановки "БХЗ" можно на маршрутах: 5, 9, 22, 118. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button5 = types.KeyboardButton("5️⃣")
+    button9 = types.KeyboardButton("9️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button5, button9, button22, button118)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspVNmL", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'гор.больница')
+def gor_bolnica(message):
+    mess = (f'Доехать до остановки "Гор.больница" можно на маршруте: 17. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button17)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspV4mu", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'политехнический')
+def politehnicheskiy(message):
+    mess = (f'Доехать до остановки "Политехнический" можно на маршрутах: 5, 8, 9, 17, 21, 22, 104, 105, 118. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button5 = types.KeyboardButton("5️⃣")
+    button8 = types.KeyboardButton("8️⃣")
+    button9 = types.KeyboardButton("9️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button4, button4a, button5, button8, button9, button17, button21, button22, button104, button105, button118)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspVIKi", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'гибдд')
+def gibdd(message):
+    mess = (f'Доехать до остановки "ГИБДД" можно на маршрутах: 21, 105. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button4, button4a, button21, button105)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspR-n2", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'автоколона 1261')
+def avtokolona_1261(message):
+    mess = (f'Доехать до остановки "Автоколона 1261" можно на маршруте: 8. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button8 = types.KeyboardButton("8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button8)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspZ0mb", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == '5 городок')
+def pyatyy_gorodok(message):
+    mess = (f'Доехать до остановки "5 городок" можно на маршруте: 8. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button8 = types.KeyboardButton("8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button8)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsp68jm", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == '4 городок')
+def chetvertyy_gorodok(message):
+    mess = (f'Доехать до остановки "4 городок" можно на маршрутах: 105. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button4, button4a, button105)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspbYo2", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'патп')
+def patp(message):
+    mess = (f'Доехать до остановки "ПАТП" можно на маршрутах: 8, 21. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button8 = types.KeyboardButton("8️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button8, button21)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspbT6W", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'мелькомбинат')
+def melkombinat(message):
+    mess = (f'Доехать до остановки "Мелькомбинат" можно на маршрутах: 8, 21. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button8 = types.KeyboardButton("8️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button8, button21)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspfYNt", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'эйдемана')
+def eydemana(message):
+    mess = (f'Доехать до остановки "Эйдемана" можно на маршрутах: 5, 8, 9, 17, 21, 22, 104, 105, 118. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button5 = types.KeyboardButton("5️⃣")
+    button8 = types.KeyboardButton("8️⃣")
+    button9 = types.KeyboardButton("9️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button4, button4a, button5, button8, button9, button17, button21, button22, button104, button105, button118)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspfWJ8", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'гор.сад')
+def gor_sad(message):
+    mess = (f'Доехать до остановки "Гор.сад" можно на маршрутах: 3а, 5, 8, 9, 10, 17, 21, 22, 104, 105, 118, 119. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3a = types.KeyboardButton("3️⃣а")
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button5 = types.KeyboardButton("5️⃣")
+    button8 = types.KeyboardButton("8️⃣")
+    button9 = types.KeyboardButton("9️⃣")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button3a, button4, button4a, button5, button8, button9, button10, button17, button21, button22, button104, button105, button118, button119)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspjNKL", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'площадь коростелева')
+def ploshchad_korosteleva(message):
+    mess = (f'Доехать до остановки "Площадь Коростелева" можно на маршрутах: 1, 3, 3а, 5, 8, 9, 10, 13,  '
+            f'15, 17, 19, 21, 22, 23, 24, 103, 103у, 105, 118, 119, 122. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button3 = types.KeyboardButton("3️⃣")
+    button3a = types.KeyboardButton("3️⃣а")
+    button4 = types.KeyboardButton("")
+    button5 = types.KeyboardButton("5️⃣")
+    button4a = types.KeyboardButton("")
+    button6 = types.KeyboardButton("")
+    button8 = types.KeyboardButton("8️⃣")
+    button9 = types.KeyboardButton("9️⃣")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button17 = types.KeyboardButton("1️⃣7️⃣")
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button1, button3, button3a, button4,  button5,  button4a, button6, button8, button9, button10, button13, button14, button15, button17, button19, button21, button22, button23, button24, button25, button103, button103u, button105, button118, button119, button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspn2jd", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'ж/д вокзал (автовокзал)')
+def zh_d_vokzal(message):
+    mess = (f'Доехать до остановки "Ж/д вокзал" можно на маршрутах: 3, 3а, 5, 8, 9, 10, 13,  '
+            f'15, 19, 21, 22, 24, 103, 103у, 104, 105, 118, 119, 122. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button3 = types.KeyboardButton("3️⃣")
+    button3a = types.KeyboardButton("3️⃣а")
+    button4 = types.KeyboardButton("")
+    button4a = types.KeyboardButton("")
+    button5 = types.KeyboardButton("5️⃣")
+    button6 = types.KeyboardButton("")
+    button8 = types.KeyboardButton("8️⃣")
+    button9 = types.KeyboardButton("9️⃣")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button13 = types.KeyboardButton("1️⃣3️⃣")
+    button14 = types.KeyboardButton("")
+    button15 = types.KeyboardButton("1️⃣5️⃣")
+    button19 = types.KeyboardButton("1️⃣9️⃣")
+    button21 = types.KeyboardButton("2️⃣1️⃣")
+    button22 = types.KeyboardButton("2️⃣2️⃣")
+    button24 = types.KeyboardButton("2️⃣4️⃣")
+    button25 = types.KeyboardButton("")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button105 = types.KeyboardButton("1️⃣0️⃣5️⃣")
+    button118 = types.KeyboardButton("1️⃣1️⃣8️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button122 = types.KeyboardButton("1️⃣2️⃣2️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button3, button3a, button4, button4a)
+    keyboard.row(button5, button6, button8, button9)
+    keyboard.row(button10, button13, button14, button15)
+    keyboard.row(button19, button21, button22, button24)
+    keyboard.row(button25, button103, button103u, button104)
+    keyboard.row(button105, button118, button119, button122)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDspzL~M", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'кинотеатр космос')
+def kinoteatr_kosmos(message):
+    mess = (f'Доехать до остановки "Кинотеатр Космос" можно на маршрутах: 1, 5, 10, 23, 103, 103у, 119. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button5 = types.KeyboardButton("5️⃣")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button14 = types.KeyboardButton("")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button5, button10)
+    keyboard.row(button23, button103, button103u, button119 )
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDsp7SZO", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'кинотеатр север')
+def kinoteatr_sever(message):
+    mess = (f'Доехать до остановки "Кинотеатр Север" можно на маршрутах: 1, 23. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button1, button23)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstAM2e", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'детская больница (север)')
+def detskaya_bolnica(message):
+    mess = (f'Доехать до остановки "Детская больница" можно на маршрутах: 10, 103, 103у, 119. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button10, button103, button103u, button119)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstAS-~", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'сизо')
+def sizo(message):
+    mess = (f'Доехать до остановки "СИЗО" можно на маршрутах: 5, 23. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button5 = types.KeyboardButton("5️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button5, button23)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstEUPb", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'мясокомбинат')
+def myasokombinat(message):
+    mess = (f'Доехать до остановки "Мясокомбинат" можно на маршрутах: 5, 23. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button5 = types.KeyboardButton("5️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button5, button23)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstEG-Q", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'коллекторная ул.')
+def kollektornaya_ul(message):
+    mess = (f'Доехать до остановки "Коллекторная ул." можно на маршрутах: 1, 10, 119. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("1️⃣")
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button1, button10, button119)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstIYyL", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'кан')
+def kan(message):
+    mess = (f'Доехать до остановки "Кан" можно на маршрутах: 5, 23. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button5 = types.KeyboardButton("5️⃣")
+    button23 = types.KeyboardButton("2️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button5, button23)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstID35", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'рассвет')
+def rassvet(message):
+    mess = (f'Доехать до остановки "Рассвет" можно на маршрутах: 10, 119. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button10 = types.KeyboardButton("1️⃣0️⃣")
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button10, button119)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstMY0r", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'бережки')
+def berezhki(message):
+    mess = (f'Доехать до остановки "Бережки" можно на маршруте: 119. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button119)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstM621", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'левобережное')
+def levoberezhnoe(message):
+    mess = (f'Доехать до остановки "Левобережное" можно на маршруте: 119. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button119 = types.KeyboardButton("1️⃣1️⃣9️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button119)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstMXjv", reply_markup=keyboard)
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'бражное')
+def brazhnoe(message):
+    mess = (f'Доехать до остановки "Бражное" можно на маршруте: 104. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button104 = types.KeyboardButton("1️⃣0️⃣4️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button104)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstQNJB", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'филимоново')
+def filimonovo(message):
+    mess = (f'Доехать до остановки "Филимоново" можно на маршрутах: 103, 103у. '
+            f'Чтобы посмотреть их расписание, нажмите кнопку с нужным номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button103u = types.KeyboardButton("1️⃣0️⃣3️⃣у")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button103, button103u)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstUENB", reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'сухая речка')
+def suhaya_rechka(message):
+    mess = (f'Доехать до остановки "Сухая речка" можно на маршруте: 103. '
+            f'Чтобы посмотреть его расписание, нажмите кнопку с номером маршрута ниже. '
+            f'Чтобы посмотреть, где находится на карте данная остановка, нажмите на геометку:')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button103 = types.KeyboardButton("1️⃣0️⃣3️⃣")
+    button_schedule = types.KeyboardButton("Как доехать до остановки ❓")
+    button_menu = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.add(button103)
+    keyboard.add(button_schedule, button_menu)
+    bot.reply_to(message, mess + "\nhttps://yandex.ru/maps/-/CDstUH0L", reply_markup=keyboard)
+
+
 @bot.message_handler(content_types=["text"])
 def send_message(message):
-
-    if message.text.lower() == ('❓ как доехать до остановки'):
-        mess = (f'Вот весь список остановок на которые я могу дать ответ. Пришлите мне нужную вам остановку из списка и '
-                f'напишите ее так же как написано там, не учитывая скобки: солнечный, '
-                f'МЖК, Северо-Западный, ремзавод, стадион текстильщик, драм театр (Порт - Артур), восход, предмостная, '
-                f'золотой ключик (набережная), лицей 1, магазин геолог, школа 15, нефтебаза, туб.санаторий, сосновый, '
-                f'семиполатинский ЛЗУ (АО "КрасЭко"), Ново-Канский ЛПХ, стрижевой, ДРСУ-3, подсобное, агроснаб, соленое, '
-                f'абанское кладбище, Пед.колледж, стариково, черемушки, ДСУ-4, ДОСААФ, ЗЛМК, ККЗ, Анцирь, Чечеул, Зеленый Луг, '
-                f'Новый Путь, строителей, школа 8, краевая(гавань), БХЗ, гор.больница, Политехнический, ГИБДД, автоколона 1261, '
-                f'5 городок, 4 городок, ПАТП, мелькомбинат, Эйдемана, гор.сад, площадь Коростелева, Ж/Д вокзал(автовокзал), '
-                f'кинотеатр Космос, кинотеатр Север, детская больница(север), СИЗО, мясокомбинат, коллекторная ул., кан, рассвет, '
-                f'бережки, левобережное, Бражное, Филимоново, Сухая речка')
-        bot.reply_to(message, mess, parse_mode='html')
-
-    if message.text.lower() == ('солнечный'):
-        mess = (f'Доехать до остановки "солнечный" можно на маршрутах: 1, 4а, 10, 17, 20, 21, 22, 23, 25, 103, 103у, 104, 118, 119. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('солнечный'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDssv8jS")
-
-    if message.text.lower() == ('мжк'):
-        mess = (f'Доехать до остановки "мжк" можно на маршрутах: 1, 4а, 10, 17, 20, 21, 22, 23, 25, 103, 103у, 104, 118, 119. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('мжк'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTBN4W")
-
-    if message.text.lower() == ('северо-западный'):
-        mess = (f'Доехать до остановки "Северо-Западный" можно на маршрутах: 1, 4а, 10, 17, 20, 21, 22, 23, 25, 103, 103у, 104, 118, 119. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('северо-западный'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTFY4b")
-
-    if message.text.lower() == ('ремзавод'):
-        mess = (f'Доехать до остановки "ремзавод" можно на маршрутах: 1, 4, 4а, 6, 10, 14, 15, 17, 19, 20, 21, 22, 23, '
-                f'25, 103, 103у, 104, 118, 119, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('ремзавод'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTJD1x")
-
-    if message.text.lower() == ('стадион текстильщик'):
-        mess = (f'Доехать до остановки "стадион текстильщик" можно на маршрутах: 1, 4, 4а, 6, 10, 14, 15, 17, 19, 20, 21, 22, 23, '
-                f'25, 103, 103у, 104, 118, 119, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('стадион текстильщик'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTNNyC")
-
-    if message.text.lower() == ('драм театр'):
-        mess = (f'Доехать до остановки "драм театр" можно на маршрутах: 1, 4, 4а, 6, 10, 14, 15, 17, 19, 20, 21, 22, 23, '
-                f'25, 103, 103у, 104, 118, 119, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('драм театр'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTRJyj")
-
-    if message.text.lower() == ('восход'):
-        mess = (f'Доехать до остановки "восход" можно на маршрутах: 1, 4, 4а, 6, 10, 14, 15, 17, 19, 20, 21, 22, 23, '
-                f'25, 103, 103у, 104, 118, 119, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('восход'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTR0p-")
-
-    if message.text.lower() == ('предмостная'):
-        mess = (f'Доехать до остановки "предмостная" можно на маршрутах: 1, 3, 4, 4а, 6, 10, 13, 14, 15, 17, 19, 20, 21,'
-                f' 22, 23, 24, 25, 103, 103у, 104, 118, 119, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('предмостная'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTZGO0")
-
-    if message.text.lower() == ('золотой ключик'):
-        mess = (f'Доехать до остановки "золотой ключик" можно на маршрутах: 3, 13, 20, 24'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('золотой ключик'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsT6XjJ")
-
-    if message.text.lower() == ('лицей 1'):
-        mess = (f'Доехать до остановки "лицей 1" можно на маршрутах: 3, 13, 20, 24'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('лицей 1'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTb4nB")
-
-    if message.text.lower() == ('магазин геолог'):
-        mess = (f'Доехать до остановки "магазин геолог" можно на маршрутах: 3, 13, 20, 24'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('магазин геолог'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTfEJO")
-
-    if message.text.lower() == ('школа 15'):
-        mess = (f'Доехать до остановки "школа 15" можно на маршрутах: 3, 13, 20, 24'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('школа 15'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTnEzy")
-
-    if message.text.lower() == ('нефтебаза'):
-        mess = (f'Доехать до остановки "нефтебаза" можно на маршрутах: 3, 20'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('нефтебаза'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTnHKj")
-
-    if message.text.lower() == ('туб.санаторий'):
-        mess = (f'Доехать до остановки "туб.санаторий" можно на маршрутах: 3, 20'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('туб.санаторий'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTrBiq")
-
-    if message.text.lower() == ('сосновый'):
-        mess = (f'Доехать до остановки "сосновый" можно на маршрутах: 3, 20'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('сосновый'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTrKMn")
-
-    if message.text.lower() == ('семиполатинский лзу'):
-        mess = (f'Доехать до остановки "семиполатинский ЛЗУ" можно на маршруте: 13'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 13. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('семиполатинский лзу'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTr2lt")
-
-    if message.text.lower() == ('ново-канский лпх'):
-        mess = (f'Доехать до остановки "Ново-Канский ЛПХ" можно на маршруте: 13'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 13. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('ново-канский лпх'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTvZ5r")
-
-    if message.text.lower() == ('стрижевой'):
-        mess = (f'Доехать до остановки "стрижевой" можно на маршруте: 13'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 13. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('стрижевой'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTv8yT")
-
-    if message.text.lower() == ('дрсу-3'):
-        mess = (f'Доехать до остановки "ДРСУ-3" можно на маршруте: 13'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 13. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('дрсу-3'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTvXLy")
-
-    if message.text.lower() == ('подсобное'):
-        mess = (f'Доехать до остановки "подсобное" можно на маршруте: 13'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 13. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('подсобное'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsTzQNq")
-
-    if message.text.lower() == ('агроснаб'):
-        mess = (f'Доехать до остановки "агроснаб" можно на маршруте: 24'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 24. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('агроснаб'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspIJZr")
-
-    if message.text.lower() == ('соленое'):
-        mess = (f'Доехать до остановки "соленое" можно на маршруте: 24. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 24. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('соленое'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsteY1c")
-
-    if message.text.lower() == ('абанское кладбище'):
-        mess = (f'Доехать до остановки "абанское кладбище" можно на маршруте: 19'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 19. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('абанское кладбище'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsteVig")
-
-    if message.text.lower() == ('пед.колледж'):
-        mess = (f'Доехать до остановки "Пед.колледж" можно на маршрутах: 4, 6, 14, 15, 25, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('пед.колледж'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspQTPx")
-
-    if message.text.lower() == ('стариково'):
-        mess = (f'Доехать до остановки "стариково" можно на маршрутах: 4, 25. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('стариково'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspUCyH")
-
-    if message.text.lower() == ('черемушки'):
-        mess = (f'Доехать до остановки "черемушки" можно на маршрутах: 14, 25. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('черемушки'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspYMN8")
-
-    if message.text.lower() == ('дсу-4'):
-        mess = (f'Доехать до остановки "ДСУ-4" можно на маршрутах: 6, 15, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('дсу-4'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsp4LJe")
-
-    if message.text.lower() == ('досааф'):
-        mess = (f'Доехать до остановки "ДОСААФ" можно на маршрутах: 6, 15, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('досааф'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspiAIQ")
-
-    if message.text.lower() == ('злмк'):
-        mess = (f'Доехать до остановки "ЗЛМК" можно на маршрутах: 6, 15, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('злмк'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspiZjw")
-
-    if message.text.lower() == ('ккз'):
-        mess = (f'Доехать до остановки "ККЗ" можно на маршрутах: 6, 15, 122. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('ккз'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspiXoS")
-
-    if message.text.lower() == ('анцирь'):
-        mess = (f'Доехать до остановки "Анцирь" можно на маршруте: 122. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 122. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('анцирь'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspmL8R")
-
-    if message.text.lower() == ('чечеул'):
-        mess = (f'Доехать до остановки "Чечеул" можно на маршрутах: 105, 118. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('чечеул'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspqOit")
-
-    if message.text.lower() == ('зеленый Луг'):
-        mess = (f'Доехать до остановки "Зеленый Луг" можно на маршруте: 118. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 118. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('зеленый Луг'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspuUPh")
-
-    if message.text.lower() == ('новый Путь'):
-        mess = (f'Доехать до остановки "Новый Путь" можно на маршруте: 118. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 118. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('новый Путь'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspyI90")
-
-    if message.text.lower() == ('строителей'):
-        mess = (f'Доехать до остановки "строителей" можно на маршруте: 22. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 22. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('строителей'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspyOkX")
-
-    if message.text.lower() == ('школа 8'):
-        mess = (f'Доехать до остановки "школа 8" можно на маршруте: 9. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 9. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('школа 8'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsp5CP6")
-
-    if message.text.lower() == ('краевая'):
-        mess = (f'Доехать до остановки "краевая" можно на маршруте: 9. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 9. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('краевая'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspBAkO")
-
-    if message.text.lower() == ('бхз'):
-        mess = (f'Доехать до остановки "БХЗ" можно на маршрутах: 5, 9, 22, 118. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('бхз'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspVNmL")
-
-    if message.text.lower() == ('гор.больница'):
-        mess = (f'Доехать до остановки "гор.больница" можно на маршруте: 17. '
-                f'Чтобы посмотреть его расписание пришлите мне цифру 17. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('гор.больница'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspV4mu")
-
-    if message.text.lower() == ('политехнический'):
-        mess = (f'Доехать до остановки "Политехнический" можно на маршрутах: 4, 4а, 5, 8, 9, 17, 21, 22, 104, 105, 118. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('политехнический'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspVIKi")
-
-    if message.text.lower() == ('гибдд'):
-        mess = (f'Доехать до остановки "ГИБДД" можно на маршрутах: 4, 4а, 21, 105.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('гибдд'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspR-n2")
-
-    if message.text.lower() == ('автоколона 1261'):
-        mess = (f'Доехать до остановки "автоколона 1261" можно на маршруте: 8.'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 8. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('автоколона 1261'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspZ0mb")
-
-    if message.text.lower() == ('5 городок'):
-        mess = (f'Доехать до остановки "5 городок" можно на маршруте: 8.'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 8. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('5 городок'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsp68jm")
-
-    if message.text.lower() == ('4 городок'):
-        mess = (f'Доехать до остановки "4 городок" можно на маршрутах: 4, 4а, 105.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('4 городок'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspbYo2")
-
-    if message.text.lower() == ('патп'):
-        mess = (f'Доехать до остановки "ПАТП" можно на маршрутах: 8, 21.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('патп'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspbT6W")
-
-    if message.text.lower() == ('мелькомбинат'):
-        mess = (f'Доехать до остановки "мелькомбинат" можно на маршрутах: 8, 21.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('мелькомбинат'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspfYNt")
-
-    if message.text.lower() == ('эйдемана'):
-        mess = (f'Доехать до остановки "Эйдемана" можно на маршрутах: 4, 4а, 5, 8, 9, 17, 21, 22, 104, 105, 118. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('эйдемана'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspfWJ8")
-
-    if message.text.lower() == ('гор.сад'):
-        mess = (f'Доехать до остановки "гор.сад" можно на маршрутах: 3а, 4, 4а, 5, 8, 9, 10, 17, 21, 22, 104, 105, 118, 119. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('гор.сад'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspjNKL")
-
-    if message.text.lower() == ('площадь коростелева'):
-        mess = (f'Доехать до остановки "Площадь Коростелева" можно на маршрутах: 1, 3, 3а, 4, 4а, 6, 8, 9, 10, 13, 14,'
-                f' 15, 17, 19, 21, 22, 23, 24, 25, 103, 103у, 105, 118, 119, 122 '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('площадь коростелева'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspn2jd")
-
-    if message.text.lower() == ('ж/д вокзал'):
-        mess = (f'Доехать до остановки "ж/д вокзал" можно на маршрутах: 3, 3а, 4, 4а, 5, 6, 8, 9, 10, 13, 14,'
-                f' 15, 19, 21, 22, 24, 25, 103, 103у, 104, 105, 118, 119, 122 '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('ж/д вокзал'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDspzL~M")
-
-    if message.text.lower() == ('кинотеатр космос'):
-        mess = (f'Доехать до остановки "кинотеатр Космос" можно на маршрутах: 1, 5, 10, 13, 14, 23, 103, 103у. '
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('кинотеатр космос'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDsp7SZO")
-
-    if message.text.lower() == ('кинотеатр север'):
-        mess = (f'Доехать до остановки "кинотеатр Север" можно на маршрутах: 1, 23.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('кинотеатр север'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstAM2e")
-
-    if message.text.lower() == ('детская больница'):
-        mess = (f'Доехать до остановки "детская больница" можно на маршрутах: 10, 103, 103у, 119.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('детская больница'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstAS-~")
-
-    if message.text.lower() == ('сизо'):
-        mess = (f'Доехать до остановки "СИЗО" можно на маршрутах: 5, 23.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('сизо'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstEUPb")
-
-    if message.text.lower() == ('мясокомбинат'):
-        mess = (f'Доехать до остановки "мясокомбинат" можно на маршрутах: 5, 23.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('мясокомбинат'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstEG-Q")
-
-    if message.text.lower() == ('коллекторная ул.'):
-        mess = (f'Доехать до остановки "коллекторная ул." можно на маршрутах: 1, 10, 119.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('коллекторная ул.'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstIYyL")
-
-    if message.text.lower() == ('кан'):
-        mess = (f'Доехать до остановки "кан" можно на маршрутах: 5, 23.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('кан'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstID35")
-
-    if message.text.lower() == ('рассвет'):
-        mess = (f'Доехать до остановки "рассвет" можно на маршрутах: 10, 119.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('рассвет'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstMY0r")
-
-    if message.text.lower() == ('бережки'):
-        mess = (f'Доехать до остановки "бережки" можно на маршруте: 119.'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 119. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('бережки'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstM621")
-
-    if message.text.lower() == ('левобережное'):
-        mess = (f'Доехать до остановки "левобережное" можно на маршруте: 119.'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 119. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('левобережное'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstMXjv")
-
-    if message.text.lower() == ('бражное'):
-        mess = (f'Доехать до остановки "Бражное" можно на маршруте: 104.'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 104. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('бражное'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstQNJB")
-
-    if message.text.lower() == ('филимоново'):
-        mess = (f'Доехать до остановки "Филимоново" можно на маршрутах: 103, 103у.'
-                f'Чтобы посмотреть их расписание пришлите мне нужный вам № маршрута. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('филимоново'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstUENB")
-
-    if message.text.lower() == ('сухая речка'):
-        mess = (f'Доехать до остановки "Сухая речка" можно на маршруте: 103.'
-                f'Чтобы посмотреть его расписание пришлите мне цифру 103. Чтобы посмотреть где находится на карте '
-                f'данная остановка, нажмите на геометку ниже')
-        bot.reply_to(message, mess, parse_mode='html')
-    if message.text.lower() == ('сухая речка'):
-        bot.reply_to(message, "https://yandex.ru/maps/-/CDstUH0L")
-
     tz = pytz.timezone('Etc/GMT-7')
 
     date_now = datetime.now(tz)
@@ -1005,15 +1667,6 @@ def send_message(message):
     if message.text.lower() == ('мелькомбинат'):
         bot.reply_to(message, мелькомбинат21вых)
 
-    if message.text.lower() == ('ближайший автобус солнечный'):
-        bot.reply_to(message, солнечный20)
-    if message.text.lower() == ('ближайший автобус солнечный'):
-        bot.reply_to(message, солнечный21)
-    if message.text.lower() == ('ближайший автобус солнечный'):
-        bot.reply_to(message, солнечный21вых)
-    if message.text.lower() == ('ближайший автобус солнечный'):
-        bot.reply_to(message, солнечный22)
-
 
     if message.text.lower() == ('дачные'):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4.1.jpg', 'rb')),
@@ -1052,6 +1705,11 @@ def send_message(message):
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('3.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('3.2.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
+
+    if message.text == "3️⃣а":
+        text = f"Смотреть пометку ВЭС"
+        bot.send_photo(message.chat.id, open('3.2.jpg', 'rb'), caption=text, parse_mode="HTML", reply_to_message_id=message.message_id)
+
     if message.text == "":
         bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('4.1.jpg', 'rb')),
                                                telebot.types.InputMediaPhoto(open('4.2.jpg', 'rb'))],
@@ -1130,9 +1788,9 @@ def send_message(message):
     if message.text == "":
         bot.send_photo(message.chat.id, open('25.jpg', 'rb'), reply_to_message_id=message.message_id)
     if message.text == "1️⃣0️⃣3️⃣":
-        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('103.1.jpg', 'rb')),
-                                               telebot.types.InputMediaPhoto(open('103.2.jpg', 'rb'))],
-                                               reply_to_message_id=message.message_id)
+        bot.send_photo(message.chat.id, open('103.1.jpg', 'rb'), reply_to_message_id=message.message_id)
+    if message.text == "1️⃣0️⃣3️⃣у":
+        bot.send_photo(message.chat.id, open('103.2.jpg', 'rb'), reply_to_message_id=message.message_id)
     if message.text == "1️⃣0️⃣4️⃣":
         bot.send_photo(message.chat.id, open('104.jpg', 'rb'), reply_to_message_id=message.message_id)
     if message.text == "1️⃣0️⃣️5️⃣":
