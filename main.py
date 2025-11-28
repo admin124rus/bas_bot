@@ -43,6 +43,16 @@ import bisect
              "21:59","22:07","22:14","22:22","22:34","22:52","23:10","23:29","23:49"]
 
 
+вок9 = ["05:50","06:30","06:46","07:24","07:48","08:16","08:47","09:49","10:09","11:08","11:36","12:04","12:34","13:07",
+        "13:36","14:35","15:03","15:32","16:03","16:30","17:02","17:42","18:00","18:36","20:27","21:25"]
+
+
+
+краев9 = ["06:18","06:59","07:17","07:50","08:16","08:47","09:18","10:17","10:37","11:36","12:04","12:36","13:05","13:35",
+          "14:04","15:03","15:33","16:03","16:34","17:03","17:29","18:09","18:28","19:04","20:55","21:53"]
+
+
+
 
 солка22 = ["6:25", "6:50", "7:15", "7:40", "8:05", "8:30", "8:55", "9:20", "9:45", "10:55", "11:45", "12:10", "12:35",
            "13:00", "13:25", "13:50", "14:15", "14:40", "15:05", "15:55", "16:45", "17:10", "17:35", "18:00", "18:45",
@@ -229,7 +239,7 @@ def ближайший_21(message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     button1 = types.KeyboardButton("Солнечный 20")
     button2 = types.KeyboardButton("Предмостная 20")
-    button3 = types.KeyboardButton("Сосновый")
+    button3 = types.KeyboardButton("Сосновый 20")
     button4 = types.KeyboardButton("↩️ Назад")
     button5 = types.KeyboardButton("🚍 Меню 🚍")
     keyboard.row(button1, button2, ).add(button3, button4).add(button5)
@@ -240,7 +250,7 @@ def ближайший_21(message):
     mess = ('⬇️ Выберите остановку ⬇️')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     button1 = types.KeyboardButton("Солнечный 21")
-    button2 = types.KeyboardButton("Мелькомбинат")
+    button2 = types.KeyboardButton("Мелькомбинат 21")
     button3 = types.KeyboardButton("↩️ Назад")
     button4 = types.KeyboardButton("🚍 Меню 🚍")
     keyboard.row(button1, button2).add(button3, button4)
@@ -253,8 +263,8 @@ def ближайший_22(message):
     button1 = types.KeyboardButton("Солнечный 22")
     button2 = types.KeyboardButton("Предмостная 22")
     button3 = types.KeyboardButton("Вокзал 22")
-    button4 = types.KeyboardButton("Политехнический")
-    button5 = types.KeyboardButton("Строителей")
+    button4 = types.KeyboardButton("Политехнический 22")
+    button5 = types.KeyboardButton("Строителей 22")
     button6 = types.KeyboardButton("↩️ Назад")
     button7 = types.KeyboardButton("🚍 Меню 🚍")
     keyboard.row(button1, button2).add(button3, button4).add(button5, button6).add(button7)
@@ -1560,11 +1570,11 @@ def send_message(message):
         bot.reply_to(message, вокзал22)
     if message.text.lower() == ('вокзал 22'):
         bot.reply_to(message, вокзал22_1)
-    if message.text.lower() == ('политехнический'):
+    if message.text.lower() == ('политехнический 22'):
         bot.reply_to(message, политех22)
-    if message.text.lower() == ('политехнический'):
+    if message.text.lower() == ('политехнический 22'):
         bot.reply_to(message, политех22_1)
-    if message.text.lower() == ('строителей'):
+    if message.text.lower() == ('строителей 22'):
         bot.reply_to(message, поселок22_1)
 
     date_now = datetime.now()
@@ -1610,7 +1620,7 @@ def send_message(message):
         bot.reply_to(message, солнечный20)
     if message.text.lower() == ('предмостная 20'):
         bot.reply_to(message, канпер20)
-    if message.text.lower() == ('сосновый'):
+    if message.text.lower() == ('сосновый 20'):
         bot.reply_to(message, сосновый20_1)
     if message.text.lower() == ('предмостная 20'):
         bot.reply_to(message, канпер20_1)
@@ -1659,9 +1669,9 @@ def send_message(message):
         bot.reply_to(message, солнечный21)
     if message.text.lower() == ('солнечный 21'):
         bot.reply_to(message, солнечный21вых)
-    if message.text.lower() == ('мелькомбинат'):
+    if message.text.lower() == ('мелькомбинат 21'):
         bot.reply_to(message, мелькомбинат21)
-    if message.text.lower() == ('мелькомбинат'):
+    if message.text.lower() == ('мелькомбинат 21'):
         bot.reply_to(message, мелькомбинат21вых)
 
 
