@@ -46,10 +46,23 @@ import bisect
 вок9 = ["05:50","06:30","06:46","07:24","07:48","08:16","08:47","09:49","10:09","11:08","11:36","12:04","12:34","13:07",
         "13:36","14:35","15:03","15:32","16:03","16:30","17:02","17:42","18:00","18:36","20:27","21:25"]
 
+корост9 = ["05:53", "06:33", "06:49", "07:27", "07:51", "08:19", "08:50", "09:52", "10:11", "11:11", "11:39", "12:07",
+           "12:37", "13:10", "13:39", "14:38", "15:06", "15:35", "16:06", "16:33", "17:05", "17:45", "18:03", "18:39",
+           "20:30", "21:28"]
 
+полит9 = ["06:01","06:41","06:57","07:35","07:59","08:27","08:58","10:00","10:19","11:19","11:47","12:15","12:45","13:18",
+          "13:47","14:46","15:14","15:43","16:14","16:41","17:13","17:53","18:11","18:47","20:38","21:36"]
 
 краев9 = ["06:18","06:59","07:17","07:50","08:16","08:47","09:18","10:17","10:37","11:36","12:04","12:36","13:05","13:35",
           "14:04","15:03","15:33","16:03","16:34","17:03","17:29","18:09","18:28","19:04","20:55","21:53"]
+
+полит_9 = ["06:33","07:13","07:32","08:04","08:31","09:02","09:33","10:32","10:52","11:51","12:19","12:51","13:20","13:50",
+           "14:19","15:18","15:48","16:18","16:49","17:18","17:44","18:24","18:43","19:19","21:10","22:08"]
+
+корост_9 = ["06:41","07:20","07:40","08:12","08:39","09:10","09:41","10:40","11:00","12:00","12:27","12:59","13:28","13:58",
+            "14:27","15:26","15:56","16:26","16:57","17:26","17:54","18:32","18:51","19:27","21:18","22:16"]
+
+
 
 
 
@@ -203,11 +216,12 @@ def bas(message):
     mess = ('⬇️ Выберите маршрут ⬇️')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     button1 = types.KeyboardButton("Ближайший 1")
-    button2 = types.KeyboardButton("Ближайший 20")
-    button3 = types.KeyboardButton("Ближайший 21")
-    button4 = types.KeyboardButton("Ближайший 22")
-    button5 = types.KeyboardButton("🚍 Меню 🚍")
-    keyboard.row(button1, button2).add(button3, button4).add(button5)
+    button9=  types.KeyboardButton("Ближайший 9")
+    button20 = types.KeyboardButton("Ближайший 20")
+    button21 = types.KeyboardButton("Ближайший 21")
+    button22 = types.KeyboardButton("Ближайший 22")
+    button = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button9).add(button20, button21).add(button22).add(button)
     bot.reply_to(message, mess, reply_markup=keyboard)
 
 @bot.message_handler(func=lambda message: message.text == '↩️ Назад')
@@ -215,11 +229,12 @@ def назад(message):
     mess = ('⬇️ Выберите маршрут ⬇️')
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     button1 = types.KeyboardButton("Ближайший 1")
-    button2 = types.KeyboardButton("Ближайший 20")
-    button3 = types.KeyboardButton("Ближайший 21")
-    button4 = types.KeyboardButton("Ближайший 22")
-    button5 = types.KeyboardButton("🚍 Меню 🚍")
-    keyboard.row(button1, button2).add(button3, button4).add(button5)
+    button9 = types.KeyboardButton("Ближайший 9")
+    button20 = types.KeyboardButton("Ближайший 20")
+    button21 = types.KeyboardButton("Ближайший 21")
+    button22 = types.KeyboardButton("Ближайший 22")
+    button = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button9).add(button20, button21).add(button22).add(button)
     bot.reply_to(message, mess, reply_markup=keyboard)
 
 @bot.message_handler(func=lambda message: message.text == 'Ближайший 1')
@@ -231,6 +246,19 @@ def ближайший_1(message):
     button3 = types.KeyboardButton("↩️ Назад")
     button4 = types.KeyboardButton("🚍 Меню 🚍")
     keyboard.row(button1, button2).add(button3, button4)
+    bot.reply_to(message, mess, reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: message.text == 'Ближайший 9')
+def ближайший_9(message):
+    mess = ('⬇️ Выберите остановку ⬇️')
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    button1 = types.KeyboardButton("Вокзал 9")
+    button2 = types.KeyboardButton("площадь коростелева 9")
+    button3 = types.KeyboardButton("Политехнический 9")
+    button4 = types.KeyboardButton("ул. краевая")
+    button5 = types.KeyboardButton("↩️ Назад")
+    button6 = types.KeyboardButton("🚍 Меню 🚍")
+    keyboard.row(button1, button2).add(button3, button4).add(button5, button6)
     bot.reply_to(message, mess, reply_markup=keyboard)
 
 @bot.message_handler(func=lambda message: message.text == 'Ближайший 20')
@@ -1475,14 +1503,101 @@ def send_message(message):
     else:
         коллекторная1 = "нет ближайшего времени"
 
-    if message.text.lower() == ('ближайший 1'):
-        mess = (f'Выберите остановку и напишите ее так же как написано тут: солнечный 22, предмостная 22, вокзал 22,'
-                f' политехнический, строителей')
-        bot.reply_to(message, mess, parse_mode='html')
+
     if message.text.lower() == ('солнечный 1'):
         bot.reply_to(message, солнечный1)
     if message.text.lower() == ('коллекторная'):
         bot.reply_to(message, коллекторная1)
+
+
+
+    date_now = datetime.now(tz)
+    now = date_now.strftime("%H:%M")
+    time = datetime.strptime(now, "%H:%M")
+
+    time9в = [datetime.strptime(temp, "%H:%M") for temp in вок9]
+
+    ind = bisect.bisect_right(time9в, time)
+    if ind < len(вок9):
+        вокзал9 = f"Ближайший 9 в {вок9[ind]}"
+    else:
+        вокзал9 = "нет ближайшего времени"
+
+    date_now = datetime.now(tz)
+    now = date_now.strftime("%H:%M")
+    time = datetime.strptime(now, "%H:%M")
+
+    time9к = [datetime.strptime(temp, "%H:%M") for temp in корост9]
+
+    ind = bisect.bisect_right(time9к, time)
+    if ind < len(корост9):
+        коростелева9 = f"Ближайший 9 в {корост9[ind]} - направление вокзал - ул. Краевая"
+    else:
+        коростелева9 = "нет ближайшего времени"
+
+    date_now = datetime.now(tz)
+    now = date_now.strftime("%H:%M")
+    time = datetime.strptime(now, "%H:%M")
+
+    time9п = [datetime.strptime(temp, "%H:%M") for temp in полит9]
+
+    ind = bisect.bisect_right(time9п, time)
+    if ind < len(полит9):
+        политех9 = f"Ближайший 9 в {полит9[ind]} - направление вокзал - ул. Краевая"
+    else:
+        политех9 = "нет ближайшего времени"
+
+    date_now = datetime.now(tz)
+    now = date_now.strftime("%H:%M")
+    time = datetime.strptime(now, "%H:%M")
+
+    time9кра = [datetime.strptime(temp, "%H:%M") for temp in краев9]
+
+    ind = bisect.bisect_right(time9кра, time)
+    if ind < len(краев9):
+        краевая9 = f"Ближайший 9 в {краев9[ind]}"
+    else:
+        краевая9 = "нет ближайшего времени"
+
+    date_now = datetime.now(tz)
+    now = date_now.strftime("%H:%M")
+    time = datetime.strptime(now, "%H:%M")
+
+    time9_1п = [datetime.strptime(temp, "%H:%M") for temp in полит_9]
+
+    ind = bisect.bisect_right(time9_1п, time)
+    if ind < len(полит_9):
+        политех9_1 = f"Ближайший 9 в {полит_9[ind]} - направление ул. Краевая - вокзал"
+    else:
+        политех9_1 = "нет ближайшего времени"
+
+    date_now = datetime.now(tz)
+    now = date_now.strftime("%H:%M")
+    time = datetime.strptime(now, "%H:%M")
+
+    time9_1к = [datetime.strptime(temp, "%H:%M") for temp in корост_9]
+
+    ind = bisect.bisect_right(time9_1к, time)
+    if ind < len(корост_9):
+        коростелева9_1 = f"Ближайший 9 в {корост_9[ind]} - направление ул. Краевая - вокзал"
+    else:
+        коростелева9_1 = "нет ближайшего времени"
+
+
+
+    if message.text.lower() == ('вокзал 9'):
+        bot.reply_to(message, вокзал9)
+    if message.text.lower() == ('площадь коростелева 9'):
+        bot.reply_to(message, коростелева9)
+    if message.text.lower() == ('площадь коростелева 9'):
+        bot.reply_to(message, коростелева9_1)
+    if message.text.lower() == ('политехнический 9'):
+        bot.reply_to(message, политех9)
+    if message.text.lower() == ('политехнический 9'):
+        bot.reply_to(message, политех9_1)
+    if message.text.lower() == ('ул. краевая'):
+        bot.reply_to(message, краевая9)
+
 
 
     date_now = datetime.now(tz)
