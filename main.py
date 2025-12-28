@@ -1878,7 +1878,15 @@ def send_message(message):
                                                telebot.types.InputMediaPhoto(open('15.4.jpg', 'rb'))],
                                                reply_to_message_id=message.message_id)
     if message.text == "1️⃣7️⃣":
-        bot.send_photo(message.chat.id, open('17.jpg', 'rb'), reply_to_message_id=message.message_id)
+        bot.send_media_group(message.chat.id, [telebot.types.InputMediaPhoto(open('17.1.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('17.2.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('17.3.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('17.4.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('17.5.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('17.6.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('17.7.jpg', 'rb')),
+                                               telebot.types.InputMediaPhoto(open('17.8.jpg', 'rb'))],
+                                               reply_to_message_id=message.message_id)
     if message.text == "1️⃣9️⃣":
         bot.send_photo(message.chat.id, open('19.jpg', 'rb'), reply_to_message_id=message.message_id)
     if message.text == "2️⃣0️⃣":
